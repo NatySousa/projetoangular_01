@@ -1,0 +1,100 @@
+<h4>Consulta de Empresas</h4>
+<p>
+    Listagem de empresas cadastradas
+</p>
+<hr />
+
+<div *ngIf="mensagemExclusao" class="alert alert-secondary">
+    <strong>{{mensagemExclusao}}</strong>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nome Fantasia</th>
+            <th>Razão Social</th>
+            <th>CNPJ</th>
+            <th width="160">Operações</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let e of empresas | paginate : { itemsPerPage : 5, currentPage : page, totalItems : empresas.length }">
+            <td>{{e.nomeFantasia}}</td>
+            <td>{{e.razaoSocial}}</td>
+            <td>{{e.cnpj}}</td>
+            <td>
+                <button class="btn btn-primary btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#janelaedicao"
+                    (click)="obterEmpresa(e.idEmpresa)">
+                    Editar
+                </button>
+                &nbsp;
+                <button class="btn btn-danger btn-sm" 
+                    (click)="excluirEmpresa(e.idEmpresa)">
+                    Excluir
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                Quantidade de empresas: {{empresas.length}}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<pagination-controls
+    (pageChange)="handlePageChange($event)"
+    previousLabel="Anterior"
+    nextLabel="Próximo">
+</pagination-controls>
+
+<!-- Janela para edição de empresas -->
+<div id="janelaedicao" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Atualizar dados de empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div *ngIf="mensagemEdicao" class="alert alert-secondary">
+                    <strong>{{mensagemEdicao}}</strong>
+                </div>
+
+                <form #formEdicao="ngForm" (submit)="atualizarEmpresa(formEdicao)">
+
+                    <input type="hidden" name="idEmpresa"
+                        [(ngModel)]="empresa.idEmpresa" />
+
+                    <label>Nome Fantasia:</label>
+                    <input type="text" class="form-control" 
+                        name="nomeFantasia" 
+                        [(ngModel)]="empresa.nomeFantasia" />
+                    <br />
+
+                    <label>Razão Social:</label>
+                    <input type="text" class="form-control" 
+                        name="razaoSocial"
+                        [(ngModel)]="empresa.razaoSocial" />
+                    <br />
+
+                    <label>CNPJ:</label>
+                    <input type="text" class="form-control" 
+                        name="cnpj" readonly="readonly"
+                        [(ngModel)]="empresa.cnpj" />
+                    <br />
+
+                    <input type="submit" value="Atualizar Empresa" 
+                           class="btn btn-success" />
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

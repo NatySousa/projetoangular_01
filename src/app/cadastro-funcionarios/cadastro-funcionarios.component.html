@@ -1,0 +1,55 @@
+<h4>Cadastro de Funcionários</h4>
+<p>
+    Preencha o formulário para cadastrar um funcionário.
+</p>
+<hr />
+
+<div *ngIf="mensagem" class="alert alert-secondary">
+    <strong>{{mensagem}}</strong>
+</div>
+
+<form #formCadastro="ngForm" (submit)="cadastrarFuncionario(formCadastro)">
+
+    <label>Nome do Funcionário:</label>
+    <input type="text" class="form-control" name="nome" ngModel />
+    <div class="text-danger">
+        {{validacoes.Nome}}
+    </div>
+    <br />
+
+    <label>CPF:</label>
+    <input type="text" class="form-control" name="cpf" ngModel />
+    <div class="text-danger">
+        {{validacoes.Cpf}}
+    </div>
+    <br />
+
+    <label>Matrícula:</label>
+    <input type="text" class="form-control" name="matricula" ngModel />
+    <div class="text-danger">
+        {{validacoes.Matricula}}
+    </div>
+    <br />
+
+    <label>Data de Admissão:</label>
+    <input type="date" class="form-control" name="dataAdmissao" ngModel />
+    <div class="text-danger">
+        {{validacoes.DataAdmissao}}
+    </div>
+    <br />
+
+    <label>Selecione a empresa:</label>
+    <select class="form-select" name="idEmpresa" ngModel>
+        <option value="">Escolha uma opção</option>
+        <option *ngFor="let e of empresas" value="{{e.idEmpresa}}">
+            {{e.nomeFantasia}} (CNPJ: {{e.cnpj}})
+        </option>
+    </select>
+    <div class="text-danger">
+        {{validacoes.IdEmpresa}}
+    </div>
+    <br />
+
+    <input type="submit" value="Cadastrar Funcionário" class="btn btn-success" />
+
+</form>

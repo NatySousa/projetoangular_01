@@ -1,0 +1,36 @@
+<h4>Cadastro de Empresas</h4>
+<p>
+    Preencha o formulário para cadastrar uma empresa.
+</p>
+<hr />
+
+<div *ngIf="mensagem" class="alert alert-secondary">
+    <strong>{{mensagem}}</strong>
+</div>
+
+<form #formCadastro="ngForm" (submit)="cadastrarEmpresa(formCadastro)">
+
+    <label>Nome Fantasia:</label>
+    <input type="text" class="form-control" name="nomeFantasia" ngModel />
+    <div class="text-danger">
+        {{validacoes.NomeFantasia}}
+    </div>
+    <br />
+
+    <label>Razão Social:</label>
+    <input type="text" class="form-control" name="razaoSocial" ngModel />
+    <div class="text-danger">
+        {{validacoes.RazaoSocial}}
+    </div>
+    <br />
+
+    <label>CNPJ:</label>
+    <input type="text" class="form-control" name="cnpj" ngModel />
+    <div class="text-danger">
+        {{validacoes.Cnpj}}
+    </div>
+    <br />
+
+    <input type="submit" value="Cadastrar Empresa" class="btn btn-success" />
+
+</form>

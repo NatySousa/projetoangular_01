@@ -1,0 +1,134 @@
+<h4>Consulta de Funcionários</h4>
+<p>
+    Listagem de funcionários cadastradas
+</p>
+<hr />
+
+<div *ngIf="mensagemExclusao" class="alert alert-secondary">
+    <strong>{{mensagemExclusao}}</strong>
+</div>
+
+<p>
+    Informe o período de data de admissão desejado:
+</p>
+
+<form #formConsulta="ngForm" (submit)="pesquisarFuncionarios(formConsulta)">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="date" name="dataAdmissaoMin" class="form-control" ngModel />
+        </div>
+        <div class="col-md-4">
+            <input type="date" name="dataAdmissaoMax" class="form-control" ngModel />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" value="Pesquisar Funcionários" class="btn btn-success" />
+        </div>
+    </div>
+</form>
+
+<br />
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nome do Funcionário</th>
+            <th>CPF</th>
+            <th>Matrícula</th>
+            <th>Data de Admissão</th>
+            <th>Empresas</th>
+            <th width="160">Operações</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr
+            *ngFor="let f of funcionarios | paginate : { itemsPerPage : 5, currentPage : page, totalItems : funcionarios.length }">
+            <td>{{f.nome}}</td>
+            <td>{{f.cpf}}</td>
+            <td>{{f.matricula}}</td>
+            <td>{{f.dataAdmissao | date : 'dd/MM/yyyy'}}</td>
+            <td>
+                {{f.nomeFantasia}} <br />
+                <small>CNPJ: {{f.cnpj}}</small>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#janelaedicao"
+                    (click)="obterFuncionario(f.idFuncionario)">
+                    Editar
+                </button>
+                &nbsp;
+                <button class="btn btn-danger btn-sm" (click)="excluirFuncionario(f.idFuncionario)">
+                    Excluir
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                Quantidade de funcionários: {{funcionarios.length}}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<pagination-controls (pageChange)="handlePageChange($event)" previousLabel="Anterior" nextLabel="Próximo">
+</pagination-controls>
+
+<!-- Janela para edição de empresas -->
+<div id="janelaedicao" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Atualizar dados de funcionário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div *ngIf="mensagemEdicao" class="alert alert-secondary">
+                    <strong>{{mensagemEdicao}}</strong>
+                </div>
+
+                <form #formEdicao="ngForm" (submit)="atualizarFuncionario(formEdicao)">
+
+                    <input type="hidden" name="idFuncionario" 
+                        [(ngModel)]="funcionario.idFuncionario"/>
+
+                    <label>Nome do Funcionário:</label>
+                    <input type="text" class="form-control" name="nome" 
+                        [(ngModel)]="funcionario.nome" />
+                    <br />
+
+                    <label>CPF:</label>
+                    <input type="text" class="form-control" name="cpf"
+                        [(ngModel)]="funcionario.cpf" />
+                    <br />
+
+                    <label>Matrícula:</label>
+                    <input type="text" class="form-control" name="matricula"
+                        [(ngModel)]="funcionario.matricula" />
+                    <br />
+
+                    <label>Data de Admissão:</label>
+                    <input type="text" class="form-control" name="dataAdmissao" 
+                        [(ngModel)]="funcionario.dataAdmissao"/>
+                    <br />
+
+                    <label>Selecione a empresa:</label>
+                    <select class="form-select" name="idEmpresa"
+                        [(ngModel)]="funcionario.idEmpresa">
+                        <option value="">Escolha uma opção</option>
+                        <option *ngFor="let e of empresas" value="{{e.idEmpresa}}">
+                            {{e.nomeFantasia}} (CNPJ: {{e.cnpj}})
+                        </option>
+                    </select>
+                    <br />
+
+                    <input type="submit" value="Atualizar Funcionário" class="btn btn-success" />
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
